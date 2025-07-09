@@ -193,3 +193,95 @@ Content-Type: application/json
   "message": "Invalid Email and Password"
 }
 ```
+
+## Get User Profile
+
+### Endpoint
+
+**URL:** `/users/profile`  
+**Method:** `GET`  
+**Description:** Retrieve the currently authenticated user's profile information.
+
+### Request Headers
+
+| Header         | Value                | Required |
+| -------------- | -------------------- | -------- |
+| Authorization  | Bearer `<JWT_TOKEN>` | Yes      |
+| Content-Type   | application/json     | Yes      |
+
+### Responses
+
+#### Success (200 OK)
+
+Returns the user object for the authenticated session:
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "_id": "60f5a3c2c2a5120dc8f0bb3d",
+  "fullname": {
+    "first_name": "John",
+    "last_name": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": null
+}
+```
+
+#### Authentication Error (401 Unauthorized)
+
+If no valid token is provided:
+
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Unauthorized: Token Expires"
+}
+```
+
+## User Logout
+
+### Endpoint
+
+**URL:** `/users/logout`  
+**Method:** `GET`  
+**Description:** Logout the current user and invalidate their JWT.
+
+### Request Headers
+
+| Header         | Value                | Required |
+| -------------- | -------------------- | -------- |
+| Authorization  | Bearer `<JWT_TOKEN>` | Yes      |
+| Content-Type   | application/json     | Yes      |
+
+### Responses
+
+#### Success (200 OK)
+
+Clears the authentication cookie and blacklists the token:
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Authentication Error (401 Unauthorized)
+
+If no valid token is provided or token is invalid:
+
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Unauthorized: Token Expires"
+}
+```
