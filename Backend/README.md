@@ -285,3 +285,112 @@ Content-Type: application/json
   "message": "Unauthorized: Token Expires"
 }
 ```
+
+## Captain Registration
+
+### Endpoint
+
+**URL:** `/captains/register`  
+**Method:** `POST`  
+**Description:** Register a new captain with personal and vehicle details.
+
+### Request Headers
+
+| Header           | Value            | Required |
+| ---------------- | ---------------- | -------- |
+| Content-Type     | application/json | Yes      |
+
+### Request Body
+
+Send a JSON object with the following properties:
+
+| Field                  | Type    | Required | Validation                                    |
+| ---------------------- | ------- | -------- | --------------------------------------------- |
+| `fullname.first_name`  | String  | Yes      | Minimum 3 characters                           |
+| `fullname.last_name`   | String  | Yes      | Minimum 3 characters                           |
+| `email`                | String  | Yes      | Must be a valid email format                   |
+| `password`             | String  | Yes      | Minimum 6 characters                           |
+| `vehicle.color`        | String  | Yes      | Minimum 3 characters                           |
+| `vehicle.plate`        | String  | Yes      | Minimum 3 characters                           |
+| `vehicle.capacity`     | Number  | Yes      | Must be a number                               |
+| `vehicle.vehicleType`  | String  | Yes      | One of `car`, `motorcycle`, `auto`             |
+
+#### Example Request Body
+
+```json
+{
+  "fullname": {
+    "first_name": "Alice",
+    "last_name": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "strongPass123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "XYZ123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Responses
+
+#### Success (201 Created)
+
+Returns a JSON object containing a new JWT token and the captain data.
+
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "token": "<JWT_TOKEN>",
+  "captain": {
+    "_id": "60f5a3c2c2a5120dc8f0bb3d",
+    "fullname": {
+      "first_name": "Alice",
+      "last_name": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "socketId": null,
+    "status": "inactive",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Validation Error (400 Bad Request)
+
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "errors": [
+    {
+      "msg": "Invalid Email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Duplicate Captain Error (400 Bad Request)
+
+Returned when a captain with the provided email or plate already exists.
+
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "error": "Captain already exists"
+}
+```
