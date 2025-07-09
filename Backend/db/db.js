@@ -6,8 +6,8 @@ function connectToDb() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => console.log("Connected to DB"))
-    .catch((err) => console.log("Database connection error:", err));
+    .then(() => console.log("Connected to DB ✅"))
+    .catch((err) => console.log("Database connection error ❌:", err));
 }
 
 module.exports = connectToDb;

@@ -102,3 +102,94 @@ Content-Type: application/json
     ]
 }
 ```
+
+## User Login
+
+### Endpoint
+
+**URL:** `/users/login`  
+**Method:** `POST`  
+**Description:** Authenticate an existing user and return a JWT token.
+
+### Request Headers
+
+| Header       | Value            | Required |
+| ------------ | ---------------- | -------- |
+| Content-Type | application/json | Yes      |
+
+### Request Body
+
+Send a JSON object with the following properties:
+
+| Field      | Type   | Required | Validation                          |
+| ---------- | ------ | -------- | ----------------------------------- |
+| `email`    | String | Yes      | Must be a valid email format       |
+| `password` | String | Yes      | Minimum 6 characters               |
+
+#### Example Request Body
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "securePass123"
+}
+```
+
+### Responses
+
+#### Success (200 OK)
+
+Returns a JSON object containing a JWT token and the user data.
+
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "token": "<JWT_TOKEN>",
+  "user": {
+    "_id": "60f5a3c2c2a5120dc8f0bb3d",
+    "fullname": {
+      "first_name": "John",
+      "last_name": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": null
+  }
+}
+```
+
+#### Validation Error (400 Bad Request)
+
+```json
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{
+  "errors": [
+    {
+      "msg": "Invalid Email",
+      "param": "email",
+      "location": "body"
+    },
+    {
+      "msg": "Password must be at least 6 characters long!",
+      "param": "password",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Authentication Error (401 Unauthorized)
+
+Returned when credentials are invalid.
+
+```json
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "message": "Invalid Email and Password"
+}
+```
